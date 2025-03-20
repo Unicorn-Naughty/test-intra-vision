@@ -18,7 +18,7 @@ const HomePage = () => {
         id = await clientApi.tenantguid.getTenantGuid();
         Cookies.set("tenantGuid", id, { expires: 1 });
       }
-      console.log(id);
+
 
       tasksStore.fetchTasks(id);
     };
@@ -52,7 +52,7 @@ const HomePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-console.log(tasksStore.tasks);
+
 
   return (
     <>
