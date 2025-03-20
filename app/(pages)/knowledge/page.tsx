@@ -1,7 +1,9 @@
+import { H1Title } from "@/app/components/shared/reuses-components/h1-title";
+
 const KnowledgePage = () => {
   return (
     <div>
-    KnowledgePage
+    <H1Title text="KnowledgePage" />
     </div>
   )
 }

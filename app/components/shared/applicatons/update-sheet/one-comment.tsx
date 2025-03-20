@@ -1,12 +1,16 @@
+import { TaskLifetimeItemDTO } from "@/app/types/TaskLifetimeItemDTO";
+import { formatDateMonthDD } from "@/lib/format-date";
 import Image from "next/image";
 import React from "react";
 interface Props {
   className?: string;
+  comment: TaskLifetimeItemDTO;
 }
 
-export const OneComment: React.FC<Props> = ({ className }) => {
+export const OneComment: React.FC<Props> = ({ className, comment }) => {
   return (
-    <div className={className}>
+    <>
+      <div className={className}>
       <div className="flex  mb-5 gap-3">
         <Image
           src={"/avatar/12.jpg"}
@@ -17,22 +21,19 @@ export const OneComment: React.FC<Props> = ({ className }) => {
         />
         <div>
           <div className="text-gray-600 text-sm leading-[1.2]">
-            Иванов Александр
+            {comment.userName}
           </div>
           <span className="text-xs text-gray-500 leading-[1.2]">
-            12 августа, 10:00 прокомментирировал
+            {`${formatDateMonthDD(comment.createdAt)} прокомментировал(-а)`}
           </span>
+          
           <p className="p-3 text-[14px] text-[#060606] leading-[1.286] rounded-md bg-gray-200 shadow-sm">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor
-            perferendis cum ducimus! Incidunt itaque facere fuga non sequi,
-            rerum aliquam quia velit similique voluptas consectetur ipsam,
-            adipisci, omnis officia aliquid.
+            {comment.comment}
           </p>
         </div>
       </div>
     </div>
+    
+    </>
   );
 };
-
-
-  

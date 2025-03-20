@@ -12,7 +12,7 @@ export const Container: React.FC<Props> = ({ className, children }) => {
     <div className={cn("flex flex-col w-full", className)}>
       <ReusesTopBar className="mb-7" />
       <div className="flex-grow min-h-[calc(100vh-100px)]">{children}</div>
-      <ReusesBottomBar className="mt-7" />
+      <ReusesBottomBar className="mt-16" />
     </div>
   );
 };
