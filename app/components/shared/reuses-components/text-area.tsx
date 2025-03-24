@@ -16,14 +16,12 @@ export const TextArea: React.FC<TextareaProps> = ({
 }) => {
   return (
     <div>
-      <div className="mb-4 text-[14px] text-gray-500 leading-[1.714]">
-        {name}
-      </div>
       <textarea
+        placeholder={name}
         value={value}
         onChange={onChange}
         className={cn(
-          "py-2 px-4 border border-gray-300 rounded bg-gray-100 resize-none",
+          "py-2 px-4 focus:outline-none focus:border-amber-400 placeholder:text-[14px] placeholder:text-gray-500 placeholder:leading-[1.714] rounded resize-none",
           className
         )}
       ></textarea>

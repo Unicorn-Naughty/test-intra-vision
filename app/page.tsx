@@ -8,9 +8,14 @@ import React from "react";
 import { taskStore } from "./store/tasks-store";
 import { statusesStore } from "./store/statuses-store";
 import { usersStore } from "./store/users-store";
+import { prioritiesStore } from "./store/priotrities-store";
 
 const HomePage = () => {
   const tasksStore = taskStore((state) => state);
+  const statusStore = statusesStore((state) => state);
+  const priorStore = prioritiesStore((state) => state);
+  const userStore = usersStore((state) => state);
+
   useEffect(() => {
     const fetchAndSetTenantGuid = async () => {
       let id = Cookies.get("tenantGuid");
@@ -19,31 +24,10 @@ const HomePage = () => {
         Cookies.set("tenantGuid", id, { expires: 1 });
       }
 
-
-      tasksStore.fetchTasks(id);
-    };
-
-    fetchAndSetTenantGuid();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  const statusStore = statusesStore((state) => state);
-  React.useEffect(() => {
-    const fetchAndSetTenantGuid = async () => {
-      const id = Cookies.get("tenantGuid");
       if (id) {
+        tasksStore.fetchTasks(id);
         statusStore.fetchStatuses(id);
-      }
-    };
-
-    fetchAndSetTenantGuid();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const userStore = usersStore((state) => state);
-  React.useEffect(() => {
-    const fetchAndSetTenantGuid = async () => {
-      const id = Cookies.get("tenantGuid");
-      if (id) {
+        priorStore.fetchPriorities(id);
         userStore.fetchUsers(id);
       }
     };
@@ -52,17 +36,13 @@ const HomePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
-
   return (
-    <>
-      <Container>
-        <ApplicationContent
-          loading={tasksStore.loading}
-          tasks={tasksStore.tasks}
-        />
-      </Container>
-    </>
+    <Container>
+      <ApplicationContent
+        loading={tasksStore.loading}
+        tasks={tasksStore.tasks}
+      />
+    </Container>
   );
 };
 

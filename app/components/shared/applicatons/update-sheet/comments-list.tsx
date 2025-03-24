@@ -4,7 +4,7 @@ import { OneComment } from "./one-comment";
 import { taskStore } from "@/app/store/tasks-store";
 interface Props {
   className?: string;
-  id: number | undefined;
+  id: number
 }
 
 export const CommentsList: React.FC<Props> = ({ className, id }) => {

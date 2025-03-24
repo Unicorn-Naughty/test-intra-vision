@@ -9,9 +9,10 @@ import { taskStore } from "@/app/store/tasks-store";
 import { TaskDTO } from "@/app/types/TaskDTO";
 import { usersStore } from "@/app/store/users-store";
 import { UserDTO } from "@/app/types/UserDTO";
+
 interface Props {
   className?: string;
-  task: TaskDTO | null;
+  task: TaskDTO;
   open: boolean;
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -21,17 +22,26 @@ export const UsersComponent: React.FC<Props> = ({
   open,
   onOpenChange,
 }) => {
-  const user = {
-    executorId: task?.executorId,
-    executorName: task?.executorName,
-  };
+  const [userChecked, setUser] = React.useState({
+    executorId: task.executorId,
+    executorName: task.executorName,
+  });
 
-  const [userChecked, setUser] = React.useState(user);
   const store = usersStore((state) => state.users);
   const tasksStore = taskStore((state) => state);
+
+  // Update userChecked whenever the task prop changes
+  React.useEffect(() => {
+    setUser({
+      executorId: task.executorId,
+      executorName: task.executorName,
+    });
+  }, [task]);
+
   const filtredUsers = store.filter(
     (usersFiltred) => usersFiltred.id !== userChecked.executorId
   );
+
   const handleChangeExecutor = (item: UserDTO) => {
     setUser({
       executorId: item.id,
@@ -68,7 +78,7 @@ export const UsersComponent: React.FC<Props> = ({
             <div className={`text-[14px] text-[#a09fa8] leading-[1.714]`}>
               Исполнитель
             </div>
-            <div className="text-sm  text-[rgb(3,3,3)] leading-[1.714] whitespace-nowrap">
+            <div className="text-sm text-[rgb(3,3,3)] leading-[1.714] whitespace-nowrap">
               {userChecked.executorName}
             </div>
           </div>
@@ -76,7 +86,11 @@ export const UsersComponent: React.FC<Props> = ({
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-full p-2">
         {filtredUsers.map((item, i) => (
-          <div className="cursor-pointer" onClick={() => handleChangeExecutor(item)} key={i}>
+          <div
+            className="cursor-pointer"
+            onClick={() => handleChangeExecutor(item)}
+            key={i}
+          >
             {item.name}
           </div>
         ))}

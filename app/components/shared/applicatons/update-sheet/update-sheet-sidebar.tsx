@@ -1,4 +1,4 @@
-"use client";
+
 import React from "react";
 import { UpdateSheetItem } from "../../reuses-components/update-sheet-item";
 import { TaskDTO } from "@/app/types/TaskDTO";
@@ -7,7 +7,7 @@ import { StatusesComponent } from "./statuses-component";
 import { UsersComponent } from "./users-component";
 interface Props {
   className?: string;
-  task: TaskDTO | null;
+  task: TaskDTO;
 }
 
 export const UpdateSheetSidebar: React.FC<Props> = ({ className, task }) => {

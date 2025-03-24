@@ -1,5 +1,6 @@
 import { TaskLifetimeItemDTO } from "@/app/types/TaskLifetimeItemDTO";
 import { formatDateMonthDD } from "@/lib/format-date";
+import DOMPurify from "dompurify";
 import Image from "next/image";
 import React from "react";
 interface Props {
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export const OneComment: React.FC<Props> = ({ className, comment }) => {
+  const sanitizedText = DOMPurify.sanitize(comment.comment);
   return (
     <>
       <div className={className}>
@@ -27,8 +29,7 @@ export const OneComment: React.FC<Props> = ({ className, comment }) => {
             {`${formatDateMonthDD(comment.createdAt)} прокомментировал(-а)`}
           </span>
           
-          <p className="p-3 text-[14px] text-[#060606] leading-[1.286] rounded-md bg-gray-200 shadow-sm">
-            {comment.comment}
+          <p dangerouslySetInnerHTML={{ __html:sanitizedText }} className="p-3 text-[14px] text-[#060606] leading-[1.286] rounded-md bg-gray-200 shadow-sm">
           </p>
         </div>
       </div>

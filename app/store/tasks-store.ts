@@ -6,17 +6,17 @@ import { statusesStore } from "./statuses-store";
 import { usersStore } from "./users-store";
 import { TaskCreateDTO } from "../types/TaskCreateDTO";
 
-interface ITaskStore {
+interface ITasksStore {
     loading: boolean;
     tasks: TaskDTO[];
     fetchTasks: (id: string) => Promise<void>;
     updateTaskStatus: (id: string, body: TaskUpdateDTO) => Promise<void>
     updateTaskExecutor: (id: string, body: TaskUpdateDTO) => Promise<void>
     updateTaskComments: (id: string, body: TaskUpdateDTO) => Promise<void>
-    createTask: (id: string, body: TaskCreateDTO) => Promise<void>
+    createTask: (id: string, body: TaskCreateDTO) => Promise<number>
 }
 
-export const taskStore = create<ITaskStore>((set) => ({
+export const taskStore = create<ITasksStore>((set) => ({
     loading: true,
     tasks: [],
     fetchTasks: async (id: string) => {
@@ -118,11 +118,10 @@ export const taskStore = create<ITaskStore>((set) => ({
     },
     createTask: async (id: string, body: TaskCreateDTO) => {
         try {
-            await clientApi.tasks.postTask(id, body)
-            const lastTaskId = taskStore.getState().tasks.at(-1)?.id
-            if (lastTaskId) {
+            const postId = await clientApi.tasks.postTask(id, body);
+            if (postId) {
                 const newTask = {
-                    id: lastTaskId + 1,
+                    id: postId,
                     name: body.name,
                     description: body.description,
                     createdAt: new Date().toISOString(),
@@ -146,15 +145,15 @@ export const taskStore = create<ITaskStore>((set) => ({
                     executorGroupId: 0,
                     executorGroupName: "",
                     lifetimeItems: []
-                }
+                };
                 set(state => ({
                     tasks: [...state.tasks, newTask]
-                }))
+                }));
+                alert("Задача создана");
+                return newTask.id;
             }
-            alert("Задача создана")
         } catch (error) {
             console.log(error);
-
         }
     }
 

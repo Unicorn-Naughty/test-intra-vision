@@ -1,3 +1,4 @@
+'use client'
 import React from "react";
 import {
   Sheet,
@@ -13,50 +14,58 @@ import { TextArea } from "../../reuses-components/text-area";
 import { DescriptionBlock } from "../../reuses-components/description-block";
 import { UpdateSheetSidebar } from "./update-sheet-sidebar";
 import { CommentsList } from "./comments-list";
-import { TaskDTO } from "@/app/types/TaskDTO";
 import Cookies from "js-cookie";
 import { taskStore } from "@/app/store/tasks-store";
+import { oneTaskStore } from "@/app/store/one-task-store";
 interface Props {
-  className?: string;
   handleOpenChange: () => void;
   open: boolean;
-  task: TaskDTO | null;
+  postId: number;
 }
 
 export const UpdateSheet: React.FC<Props> = ({
   handleOpenChange,
   open,
-  task,
+  postId,
 }) => {
   const tasksStore = taskStore((state) => state);
+  const oneTaskStoreLocale = oneTaskStore((state) => state);
+
   const [textAreaText, setTextAreaText] = React.useState("");
   const handleTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setTextAreaText(e.target.value);
   };
+  React.useEffect(() => {
+    const id = Cookies.get("tenantGuid");
+    if (open && id) {
+      oneTaskStoreLocale.fetchOneTask(id, postId);
+    }
+  }, [open, postId]);
+
   const handleComment = () => {
-    if (task) {
+    if (oneTaskStoreLocale.task) {
       const id = Cookies.get("tenantGuid");
       const body = {
-        id: task.id,
-        name: task.name,
-        description: task.description,
+        id: oneTaskStoreLocale.task.id,
+        name: oneTaskStoreLocale.task.name,
+        description: oneTaskStoreLocale.task.description,
         comment: textAreaText,
-        price: task.price,
-        taskTypeId: task.taskTypeId,
-        statusId: task.statusId,
-        priorityId: task.priorityId,
-        serviceId: task.serviceId,
-        resolutionDatePlan: task.resolutionDatePlan,
-        initiatorId: task.initiatorId,
-        executorId: task.executorId,
-        executorGroupId: task.executorGroupId,
+        price: oneTaskStoreLocale.task.price,
+        taskTypeId: oneTaskStoreLocale.task.taskTypeId,
+        statusId: oneTaskStoreLocale.task.statusId,
+        priorityId: oneTaskStoreLocale.task.priorityId,
+        serviceId: oneTaskStoreLocale.task.serviceId,
+        resolutionDatePlan: oneTaskStoreLocale.task.resolutionDatePlan,
+        initiatorId: oneTaskStoreLocale.task.initiatorId,
+        executorId: oneTaskStoreLocale.task.executorId,
+        executorGroupId: oneTaskStoreLocale.task.executorGroupId,
       };
       if (id) {
         if (body.comment.length > 0) {
           tasksStore.updateTaskComments(id, body);
           setTextAreaText("");
         } else {
-          alert("Символов меньше 1")
+          alert("Символов меньше 1");
         }
       }
     }
@@ -73,8 +82,8 @@ export const UpdateSheet: React.FC<Props> = ({
         <DialogTitle className="hidden"></DialogTitle>
         <SheetHeader className=" flex justify-between items-center p-5 bg-[#1a4876] shadow-[0px_0px_3px_rgba(0,0,0,0.25)]">
           <div className="flex items-center gap-4 text-[18px] text-white">
-            <div className="">{task?.id}</div>
-            <div className="">{task?.name}</div>
+            <div className="">№ {oneTaskStoreLocale.task.id.toLocaleString()}</div>
+            <div className="">{oneTaskStoreLocale.task.name}</div>
           </div>
           <SheetClose className="cursor-pointer">
             <XIcon className="size-5 text-white" />
@@ -84,7 +93,7 @@ export const UpdateSheet: React.FC<Props> = ({
         <div className="flex">
           <div className="px-8 flex-grow pt-14 border border-r-gray-300">
             <DescriptionBlock
-              text={task ? task.description : ""}
+              text={oneTaskStoreLocale.task.description}
               name="Описание"
               className="mb-13"
             />
@@ -101,10 +110,10 @@ export const UpdateSheet: React.FC<Props> = ({
               className="mt-19 w-[160px] h-9 mb-12"
             />
 
-            <CommentsList className="pb-[20px]" id={task?.id} />
+            <CommentsList className="pb-[20px]" id={oneTaskStoreLocale.task.id} />
           </div>
           <UpdateSheetSidebar
-            task={task ? task : null}
+            task={oneTaskStoreLocale.task}
             className="pl-7 pr-13  mt-6 "
           />
         </div>

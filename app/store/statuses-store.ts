@@ -14,7 +14,7 @@ export const statusesStore = create<ITaskStore>((set) => ({
     statuses: [],
     fetchStatuses: async (id: string) => {
         try {
-            const data = await clientApi.smthngElse.getStatuses(id)
+            const data = await clientApi.statusesAndPriorities.getStatuses(id)
             set({ statuses: data })
         } catch (error) {
             console.log(error);
