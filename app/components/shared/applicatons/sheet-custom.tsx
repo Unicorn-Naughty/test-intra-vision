@@ -1,29 +1,24 @@
-"use client";
-import React from "react";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetHeader,
-  SheetTrigger,
-} from "../../ui/sheet";
-import { Button } from "../../ui/buttons-custom/button";
-import { DialogTitle } from "@radix-ui/react-dialog";
-import { XIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
-import Cookies from "js-cookie";
 import { taskStore } from "@/app/store/tasks-store";
-import { UpdateSheet } from "./update-sheet/update-sheet"; // Import UpdateSheet component
-
+import { cn } from "@/lib/utils";
+import { XIcon } from "lucide-react";
+import React from "react";
+import { Button } from "../../ui/buttons-custom/button";
+import Cookies from "js-cookie";
+import { useClickAway } from "react-use";
+import { SheetCustomUpdate } from "./update-sheet/sheet-custom-update";
 interface Props {
   className?: string;
+  open: boolean;
+  setIsCreateSheetOpen: (item: boolean) => void;
 }
 
-export const CreateSheet: React.FC<Props> = () => {
+export const SheetCustom: React.FC<Props> = ({
+  setIsCreateSheetOpen,
+  open,
+}) => {
   const tasksStore = taskStore((state) => state);
-  const [value, setValue] = React.useState("");
-  const [value2, setValue2] = React.useState("");
-  const [isCreateSheetOpen, setIsCreateSheetOpen] = React.useState(false);
+  const [taskNameValue, setTaskNameValue] = React.useState("");
+  const [descriptionValue, setDescriptionValue] = React.useState("");
   const [isUpdateSheetOpen, setIsUpdateSheetOpen] = React.useState(false);
   const [createdTask, setCreatedTask] = React.useState(1);
 
@@ -31,47 +26,50 @@ export const CreateSheet: React.FC<Props> = () => {
     const id = Cookies.get("tenantGuid");
     if (id) {
       const newTask = await tasksStore.createTask(id, {
-        name: value,
-        description: value2,
+        name: taskNameValue,
+        description: descriptionValue,
       });
       setCreatedTask(newTask);
-      setValue("");
-      setValue2("");
+      setTaskNameValue("");
+      setDescriptionValue("");
       setIsCreateSheetOpen(false);
       setIsUpdateSheetOpen(true);
     }
   };
+
   const handleOpenChange = () => setIsUpdateSheetOpen(!isUpdateSheetOpen);
+  const ref = React.useRef(null);
+  useClickAway(ref, () => {
+    setIsCreateSheetOpen(false);
+  });
   return (
     <>
-      <Sheet open={isCreateSheetOpen} onOpenChange={setIsCreateSheetOpen}>
-        <SheetTrigger asChild>
-          <Button
-            text="Создать заявку"
-            className="w-[180px] h-10 ml-65"
-            onClick={() => setIsCreateSheetOpen(true)}
-          />
-        </SheetTrigger>
-        <SheetContent className="bg-gray-200 shadow-md " side="right">
-          <DialogTitle className="hidden"></DialogTitle>
-          <SheetHeader className="mb-14 flex justify-between items-center p-5 bg-[#1a4876] shadow-[0px_0px_3px_rgba(0,0,0,0.25)]">
+      <div
+        ref={ref}
+        className={cn(
+          "absolute right-0 top-[72px] w-3/5  transition-opacity duration-600",
+          open ? " opacity-100 " : "  opacity-0"
+        )}
+      >
+        <div className="bg-gray-200 shadow-md h-[calc(100vh-72px)]">
+          <div className="mb-14 flex justify-between items-center p-5 bg-[#1a4876] shadow-[0px_0px_3px_rgba(0,0,0,0.25)]">
             <div className="text-[18px] text-white">Новая заявка</div>
-            <SheetClose
+            <button
               className="cursor-pointer"
               onClick={() => setIsCreateSheetOpen(false)}
             >
               <XIcon className="size-5 text-white" />
               <span className="sr-only">Close</span>
-            </SheetClose>
-          </SheetHeader>
-          <div className="px-11">
+            </button>
+          </div>
+          <div className="px-11 ">
             <div className="">
               <div className="mb-4 text-[14px] text-gray-500 leading-[1.714]">
                 Название
               </div>
               <textarea
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
+                value={taskNameValue}
+                onChange={(e) => setTaskNameValue(e.target.value)}
                 className={cn(
                   "py-2 px-4 border border-gray-300 rounded bg-gray-100 resize-none w-[620px] h-[80px]"
                 )}
@@ -82,8 +80,8 @@ export const CreateSheet: React.FC<Props> = () => {
                 Описание
               </div>
               <textarea
-                value={value2}
-                onChange={(e) => setValue2(e.target.value)}
+                value={descriptionValue}
+                onChange={(e) => setDescriptionValue(e.target.value)}
                 className={cn(
                   "py-2 px-4 border border-gray-300 rounded bg-gray-100 resize-none w-[620px] h-[130px]"
                 )}
@@ -96,11 +94,11 @@ export const CreateSheet: React.FC<Props> = () => {
               className="mt-19 w-[160px] h-9"
             />
           </div>
-        </SheetContent>
-      </Sheet>
+        </div>
+      </div>
 
       {createdTask && (
-        <UpdateSheet
+        <SheetCustomUpdate
           open={isUpdateSheetOpen}
           handleOpenChange={handleOpenChange}
           postId={createdTask}

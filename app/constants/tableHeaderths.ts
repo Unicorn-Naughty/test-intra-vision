@@ -9,7 +9,7 @@
     },
     {
       name: "Статус",
-      className: "w-[120px] ",
+      className: "w-[120px]",
     },
     {
       name: "Исполнитель",

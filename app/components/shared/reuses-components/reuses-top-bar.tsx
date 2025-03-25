@@ -9,13 +9,13 @@ export const ReusesTopBar: React.FC<Props> = ({ className }) => {
   return (
     <div
       className={cn(
-        `bg-[#d1e0ed]  shadow-[0px_0px_7px_rgba(0,0,0,0.2)]  p-4`,
+        `bg-[#d1e0ed] fixed z-50 left-[95px] right-0 shadow-[0px_0px_7px_rgba(0,0,0,0.2)]  p-4`,
         className
       )}
     >
       <label className="relative max-w-[680px]">
         <input
-          className="border-solid border-[#42aaff] w-[680px] pl-2 pr-10 h-10 rounded-[22px]   bg-white shadow-[0px_0px_7px_ rgba(0,140,240,0.15),inset_0px_1px_7px_rgba(0,0,0,0.11)]"
+          className="border border-solid border-[#42aaff] outline-none w-[680px] pl-2 pr-10 h-10 rounded-[22px]   bg-white shadow-[0px_0px_7px_ rgba(0,140,240,0.15),inset_0px_1px_7px_rgba(0,0,0,0.11)]"
           type="text"
         />
         <Image

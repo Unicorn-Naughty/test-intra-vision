@@ -1,5 +1,5 @@
 import React from "react";
-import DOMPurify from "dompurify";
+import DOMPurify from "dompurify"; // Ensure this import is correct
 
 interface Props {
   className?: string;
@@ -12,7 +12,7 @@ export const DescriptionBlock: React.FC<Props> = ({
   name,
   text,
 }) => {
-  const sanitizedText = DOMPurify.sanitize(text);
+  const sanitizedText = DOMPurify.sanitize(text); // Ensure this usage is correct
 
   return (
     <div className={className}>

@@ -5,7 +5,7 @@ interface TextareaProps
   className?: string;
   name: string;
   value: string;
-  onChange: React.ChangeEventHandler<HTMLTextAreaElement> | undefined;
+  onChange?: React.ChangeEventHandler<HTMLTextAreaElement>
 }
 
 export const TextArea: React.FC<TextareaProps> = ({
