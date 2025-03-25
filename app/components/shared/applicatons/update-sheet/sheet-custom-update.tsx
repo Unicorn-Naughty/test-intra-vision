@@ -75,7 +75,7 @@ export const SheetCustomUpdate: React.FC<Props> = ({
       {open && (
         <motion.div
           ref={ref}
-          className={cn("fixed right-0 top-[72px] w-3/5 ")}
+          className={cn("absolute right-0 top-[72px] w-3/5 ")}
           initial={{ x: "100%" }}
           animate={{ x: 0 }}
           exit={{ x: "0%" }}

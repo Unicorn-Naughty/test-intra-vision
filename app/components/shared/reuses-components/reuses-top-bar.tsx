@@ -9,7 +9,7 @@ export const ReusesTopBar: React.FC<Props> = ({ className }) => {
   return (
     <div
       className={cn(
-        `bg-[#d1e0ed] fixed z-50 left-[95px] right-0 shadow-[0px_0px_7px_rgba(0,0,0,0.2)]  p-4`,
+        `bg-[#d1e0ed]  shadow-[0px_0px_7px_rgba(0,0,0,0.2)]  p-4`,
         className
       )}
     >
